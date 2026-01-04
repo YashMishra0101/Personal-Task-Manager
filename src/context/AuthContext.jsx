@@ -28,8 +28,8 @@ export function AuthProvider({ children }) {
   const [isSecurityVerified, setIsSecurityVerified] = useState(false);
 
   useEffect(() => {
-    // Check session storage for verification status on load
-    const verified = sessionStorage.getItem("isSecurityVerified") === "true";
+    // Check local storage for verification status on load
+    const verified = localStorage.getItem("isSecurityVerified") === "true";
     setIsSecurityVerified(verified);
 
     if (!auth) {
@@ -43,7 +43,7 @@ export function AuthProvider({ children }) {
       // If user logs out, clear verification
       if (!user) {
         setIsSecurityVerified(false);
-        sessionStorage.removeItem("isSecurityVerified");
+        localStorage.removeItem("isSecurityVerified");
       }
     });
 
@@ -79,7 +79,7 @@ export function AuthProvider({ children }) {
         const validKey = securitySnap.data().key;
         if (inputKey === validKey) {
           setIsSecurityVerified(true);
-          sessionStorage.setItem("isSecurityVerified", "true");
+          localStorage.setItem("isSecurityVerified", "true");
           return true;
         }
       }
@@ -107,7 +107,7 @@ export function AuthProvider({ children }) {
   async function logout() {
     if (!auth) return;
     setIsSecurityVerified(false);
-    sessionStorage.removeItem("isSecurityVerified");
+    localStorage.removeItem("isSecurityVerified");
     return signOut(auth);
   }
 
