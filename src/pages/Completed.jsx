@@ -8,7 +8,7 @@ export default function Completed() {
   const completedTasks = tasks.filter((t) => t.completed);
 
   return (
-    <Layout title="Done">
+    <Layout title="Completed">
       {completedTasks.length > 0 ? (
         <div className="space-y-1">
           {completedTasks.map((task) => (

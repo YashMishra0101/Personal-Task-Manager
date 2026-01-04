@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTasks } from "../context/TaskContext";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../components/Layout";
-import { format } from "date-fns";
-import { endOfDay } from "date-fns";
+import { format, endOfDay } from "date-fns";
+import { Clock, Calendar as CalendarIcon } from "lucide-react";
 
 export default function EditTask() {
   const { tasks, updateTask } = useTasks();
@@ -11,15 +11,20 @@ export default function EditTask() {
   const { id } = useParams();
 
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [taskNotFound, setTaskNotFound] = useState(false);
 
+  const dateInputRef = useRef(null);
+  const timeInputRef = useRef(null);
+
   useEffect(() => {
     const task = tasks.find((t) => t.id === id);
     if (task) {
       setTitle(task.title);
+      setDescription(task.description || "");
       if (task.deadline) {
         const deadlineDate = new Date(task.deadline);
         setDate(format(deadlineDate, "yyyy-MM-dd"));
@@ -53,6 +58,7 @@ export default function EditTask() {
 
     await updateTask(id, {
       title,
+      description: description.trim(),
       deadline,
     });
 
@@ -85,12 +91,13 @@ export default function EditTask() {
   return (
     <Layout title="Edit Task">
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+        {/* Heading Field */}
         <div className="space-y-2">
           <label
             htmlFor="edit-title"
             className="text-sm font-medium text-muted-foreground"
           >
-            What needs to be done?
+            Heading <span className="text-red-500">*</span>
           </label>
           <input
             id="edit-title"
@@ -98,13 +105,32 @@ export default function EditTask() {
             placeholder="e.g. Update documentation"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-4 rounded-xl bg-muted/50 border border-transparent focus:border-border focus:ring-2 focus:ring-primary/20 text-lg placeholder:text-muted-foreground/50 text-primary transition-all"
+            className="w-full p-4 rounded-xl bg-muted/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 text-lg placeholder:text-muted-foreground/50 text-primary transition-all"
             required
             autoFocus
           />
         </div>
 
+        {/* Description Field */}
+        <div className="space-y-2">
+          <label
+            htmlFor="edit-description"
+            className="text-sm font-medium text-muted-foreground"
+          >
+            Description <span className="text-xs">(Optional)</span>
+          </label>
+          <textarea
+            id="edit-description"
+            placeholder="Add more details about this task..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={4}
+            className="w-full p-4 rounded-xl bg-muted/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 text-base placeholder:text-muted-foreground/50 text-primary transition-all resize-none"
+          />
+        </div>
+
         <div className="grid grid-cols-2 gap-4">
+          {/* Date Field */}
           <div className="space-y-2">
             <label
               htmlFor="edit-date"
@@ -112,14 +138,24 @@ export default function EditTask() {
             >
               Date
             </label>
-            <input
-              id="edit-date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full p-3 rounded-xl bg-muted/50 border border-transparent focus:border-border focus:ring-2 focus:ring-primary/20 text-primary"
-            />
+            <div className="relative">
+              <input
+                id="edit-date"
+                ref={dateInputRef}
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full p-3 pr-10 rounded-xl bg-muted/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 text-primary transition-all"
+              />
+              <CalendarIcon
+                size={18}
+                onClick={() => dateInputRef.current?.showPicker()}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer hover:text-primary transition-colors"
+              />
+            </div>
           </div>
+
+          {/* Time Field with Clock Icon */}
           <div className="space-y-2">
             <label
               htmlFor="edit-time"
@@ -127,14 +163,22 @@ export default function EditTask() {
             >
               Time (Optional)
             </label>
-            <input
-              id="edit-time"
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              disabled={!date}
-              className="w-full p-3 rounded-xl bg-muted/50 border border-transparent focus:border-border focus:ring-2 focus:ring-primary/20 text-primary disabled:opacity-50"
-            />
+            <div className="relative">
+              <input
+                id="edit-time"
+                ref={timeInputRef}
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                disabled={!date}
+                className="w-full p-3 pr-10 rounded-xl bg-muted/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 text-primary disabled:opacity-50 transition-all"
+              />
+              <Clock
+                size={18}
+                onClick={() => timeInputRef.current?.showPicker()}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer hover:text-primary transition-colors disabled:opacity-50"
+              />
+            </div>
           </div>
         </div>
 

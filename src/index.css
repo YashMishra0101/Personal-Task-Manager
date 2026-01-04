@@ -77,4 +77,11 @@
     color: var(--primary);
     transition: background-color 0.3s, color 0.3s;
   }
+
+  /* Hide native time/date picker icons to use custom Lucide icons */
+  input[type="time"]::-webkit-calendar-picker-indicator,
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
 }

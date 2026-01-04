@@ -17,7 +17,7 @@ export default function Home() {
   const remaining = activeTasks.filter((t) => !isCreatedToday(t.createdAt));
 
   return (
-    <Layout title="Tasks Manager">
+    <Layout title="My Tasks">
       {loading ? (
         <div className="flex flex-col items-center justify-center h-64 text-muted-foreground animate-pulse">
           <div className="h-4 w-32 bg-surface-hover rounded mb-2"></div>

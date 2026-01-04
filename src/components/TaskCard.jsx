@@ -7,35 +7,36 @@ import {
   Calendar,
   Trash2,
   Pencil,
-  Circle,
-  CheckCircle,
   RotateCcw,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../lib/utils";
 import { isPast, parseISO } from "date-fns";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ConfirmDialog from "./ConfirmDialog";
 import { toast } from "sonner";
 
 export default function TaskCard({ task }) {
   const { toggleTaskCompletion, deleteTask } = useTasks();
+  const navigate = useNavigate();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const timeLeft = getRemainingTime(task.deadline);
   const isOverdue = task.deadline && isPast(parseISO(task.deadline));
 
-  const handleToggleComplete = async () => {
+  const handleToggleComplete = async (e) => {
+    e.stopPropagation();
     try {
       await toggleTaskCompletion(task.id, task.completed);
-      toast.success(
-        task.completed ? "Task moved to active" : "Task completed! 🎉"
-      );
+      toast.success(task.completed ? "Task moved to active" : "Task completed");
     } catch (error) {
       toast.error("Failed to update task");
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
+    e?.stopPropagation();
     try {
       await deleteTask(task.id);
       toast.success("Task deleted successfully");
@@ -44,17 +45,24 @@ export default function TaskCard({ task }) {
     }
   };
 
+  const handleCardClick = () => {
+    navigate(`/task/${task.id}`);
+  };
+
   return (
     <>
       <motion.div
+        layout
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, x: -100 }}
+        onClick={handleCardClick}
         className={cn(
-          "group flex items-center p-4 mb-3 bg-surface hover:bg-surface-hover rounded-2xl shadow-sm border border-border transition-all active:scale-[0.98] relative overflow-hidden",
+          "group flex items-center p-4 mb-3 bg-surface hover:bg-surface-hover rounded-2xl shadow-sm border border-border transition-all cursor-pointer relative overflow-hidden active:scale-[0.98]",
           task.completed ? "opacity-60" : ""
         )}
       >
+        {/* Checkbox */}
         <button
           onClick={handleToggleComplete}
           className={cn(
@@ -76,10 +84,11 @@ export default function TaskCard({ task }) {
           )}
         </button>
 
+        {/* Info */}
         <div className="flex-1 min-w-0 z-10">
           <h3
             className={cn(
-              "text-base font-medium truncate mb-1",
+              "text-base font-medium wrap-break-word line-clamp-2 transition-all",
               task.completed
                 ? "line-through text-muted-foreground"
                 : "text-primary"
@@ -96,37 +105,38 @@ export default function TaskCard({ task }) {
                   isOverdue ? "text-red-500 font-semibold" : "text-accent"
                 )}
               >
-                <Clock size={12} aria-label="Time remaining" />
+                <Clock size={12} />
                 <span>{timeLeft}</span>
               </span>
               <span className="text-muted-foreground flex items-center space-x-1">
-                <Calendar size={12} aria-label="Deadline" />
+                <Calendar size={12} />
                 <span>{formatDeadlineDisplay(task.deadline)}</span>
               </span>
             </div>
           )}
         </div>
 
-        <div className="flex flex-col items-center gap-1 shrink-0 ml-2">
+        {/* Quick Actions */}
+        <div
+          className={cn(
+            "shrink-0 ml-2 z-10",
+            task.completed ? "flex" : "hidden group-hover:flex"
+          )}
+        >
           {task.completed ? (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleToggleComplete();
-              }}
-              className="p-1.5 text-muted-foreground hover:text-accent hover:bg-accent/10 rounded-lg transition-colors"
-              title="Move back to tasks"
-              aria-label="Move back to active tasks"
+              onClick={handleToggleComplete}
+              title="Reactivate Task"
+              className="p-1.5 text-accent bg-accent/10 hover:bg-accent hover:text-white rounded-lg transition-colors shadow-sm"
             >
               <RotateCcw size={16} />
             </button>
           ) : (
-            <>
+            <div className="flex items-center gap-1">
               <Link
                 to={`/edit/${task.id}`}
+                onClick={(e) => e.stopPropagation()}
                 className="p-1.5 text-muted-foreground hover:text-accent hover:bg-accent/10 rounded-lg transition-colors"
-                title="Edit"
-                aria-label="Edit task"
               >
                 <Pencil size={16} />
               </Link>
@@ -136,12 +146,10 @@ export default function TaskCard({ task }) {
                   setShowDeleteDialog(true);
                 }}
                 className="p-1.5 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-                title="Delete"
-                aria-label="Delete task"
               >
                 <Trash2 size={16} />
               </button>
-            </>
+            </div>
           )}
         </div>
       </motion.div>

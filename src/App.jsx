@@ -7,6 +7,7 @@ import Completed from "./pages/Completed";
 import Login from "./pages/Login";
 import DeviceManagement from "./pages/DeviceManagement";
 import NotFound from "./pages/NotFound";
+import TaskDetails from "./pages/TaskDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
@@ -50,6 +51,14 @@ export default function App() {
         element={
           <ProtectedRoute>
             <DeviceManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/task/:id"
+        element={
+          <ProtectedRoute>
+            <TaskDetails />
           </ProtectedRoute>
         }
       />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   ListTodo,
@@ -6,16 +6,20 @@ import {
   CheckCircle,
   LogOut,
   Smartphone,
+  Menu,
+  X,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useAuth } from "../context/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const handleLogout = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     try {
       await logout();
       navigate("/login");
@@ -24,77 +28,184 @@ export default function Navbar() {
     }
   };
 
-  const navItems = [
-    { to: "/", icon: ListTodo, label: "Tasks" },
-    { to: "/add", icon: PlusCircle, label: "Add" },
-    { to: "/completed", icon: CheckCircle, label: "Done" },
+  const mainNavItems = [
+    { to: "/", icon: ListTodo, label: "My Tasks" },
+    { to: "/add", icon: PlusCircle, label: "Add New Task" },
+    { to: "/completed", icon: CheckCircle, label: "Completed" },
   ];
 
-  return (
-    <nav className="fixed bottom-0 left-0 right-0 md:static md:w-64 md:h-screen bg-surface border-t md:border-t-0 md:border-r border-border pb-safe pt-2 md:pt-6 px-6 md:px-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] md:shadow-none z-50 shrink-0">
-      <div className="max-w-md md:max-w-none mx-auto md:mx-0 flex md:flex-col justify-between md:justify-start items-center md:items-stretch h-16 md:h-full">
-        <div className="flex md:flex-col justify-between md:justify-start items-center md:items-stretch w-full md:space-y-2 md:flex-1">
-          {/* Helper for desktop logo area if needed, or just spacers */}
-          <div className="hidden md:block mb-8 px-4">
-            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              Menu
-            </span>
-          </div>
+  const closeMobileSidebar = () => setIsMobileSidebarOpen(false);
 
-          {navItems.map(({ to, icon: Icon, label }) => (
+  return (
+    <>
+      {/* Mobile Hamburger Button - Fixed Top Left (Now only for Settings/Logout) */}
+      <button
+        onClick={() => setIsMobileSidebarOpen(true)}
+        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-surface/80 backdrop-blur-md rounded-xl shadow-sm border border-border text-primary hover:bg-surface-hover transition-colors"
+        aria-label="Open settings"
+      >
+        <Menu size={20} strokeWidth={2.5} />
+      </button>
+
+      {/* Mobile Bottom Navigation Bar */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface/90 backdrop-blur-xl border-t border-border flex items-center justify-around px-2 z-50 pb-safe shadow-[0_-4px_12px_-1px_rgba(0,0,0,0.05)]">
+        {mainNavItems.map(({ to, icon: Icon, label }) => (
+          <NavLink
+            key={to}
+            to={to}
+            className={({ isActive }) =>
+              cn(
+                "flex flex-col items-center justify-center space-y-1 transition-all w-1/3 py-1",
+                isActive ? "text-primary scale-105" : "text-muted-foreground"
+              )
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                <span className="text-[10px] font-bold uppercase tracking-tighter truncate w-full text-center px-1">
+                  {label}
+                </span>
+              </>
+            )}
+          </NavLink>
+        ))}
+      </nav>
+
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {isMobileSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="md:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-60"
+            onClick={closeMobileSidebar}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Sidebar (Settings & Logout) */}
+      <AnimatePresence>
+        {isMobileSidebarOpen && (
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="md:hidden fixed left-0 top-0 bottom-0 w-72 bg-surface z-70 shadow-2xl flex flex-col"
+          >
+            <div className="p-6 border-b border-border flex justify-between items-center bg-primary/5">
+              <span className="text-sm font-black uppercase tracking-widest text-primary">
+                Account Settings
+              </span>
+              <button
+                onClick={closeMobileSidebar}
+                className="p-2 text-muted-foreground hover:text-primary hover:bg-surface-hover rounded-xl transition-colors"
+                aria-label="Close settings"
+              >
+                <X size={20} strokeWidth={2.5} />
+              </button>
+            </div>
+
+            <div className="flex-1 p-6 space-y-4">
+              <NavLink
+                to="/devices"
+                onClick={closeMobileSidebar}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center space-x-4 w-full py-4 px-5 rounded-2xl transition-all font-bold",
+                    isActive
+                      ? "text-primary bg-primary/10 shadow-sm border border-primary/20"
+                      : "text-muted-foreground hover:text-primary hover:bg-surface-hover"
+                  )
+                }
+              >
+                <Smartphone size={20} strokeWidth={2.5} />
+                <span>Active Sessions</span>
+              </NavLink>
+
+              <div className="mt-8 pt-8 border-t border-border">
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-4 w-full py-4 px-5 rounded-2xl text-red-500 bg-red-50 hover:bg-red-500 hover:text-white transition-all font-black"
+                >
+                  <LogOut size={20} strokeWidth={2.5} />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 bg-muted/20 text-[10px] text-center text-muted-foreground font-medium">
+              Personal Task Manager v2.0
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Sidebar */}
+      <nav className="hidden md:flex flex-col w-64 h-screen bg-surface border-r border-border sticky top-0 shrink-0 shadow-[4px_0_12px_-1px_rgba(0,0,0,0.02)]">
+        <div className="p-8">
+          <h1 className="text-xl font-black bg-linear-to-br from-primary to-accent bg-clip-text text-transparent">
+            Task Manager
+          </h1>
+        </div>
+
+        <div className="flex-1 px-4 space-y-2">
+          <div className="mb-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+            Navigation
+          </div>
+          {mainNavItems.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
               to={to}
               className={({ isActive }) =>
                 cn(
-                  "flex flex-col md:flex-row items-center justify-center md:justify-start space-y-1 md:space-y-0 md:space-x-3 md:w-full md:py-3 md:px-4 rounded-xl transition-all duration-200",
+                  "flex items-center space-x-3 w-full py-3.5 px-5 rounded-xl transition-all font-bold",
                   isActive
-                    ? "text-primary md:bg-primary/10"
+                    ? "text-primary bg-primary/10 border-r-4 border-primary shadow-sm"
                     : "text-muted-foreground hover:text-primary hover:bg-surface-hover"
                 )
               }
             >
-              <Icon size={24} strokeWidth={2.5} className="md:w-5 md:h-5" />
-              <span className="text-xs md:text-sm font-medium">{label}</span>
+              {({ isActive }) => (
+                <>
+                  <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+                  <span className="text-sm">{label}</span>
+                </>
+              )}
             </NavLink>
           ))}
-
-          {/* Mobile Logout Button (Visible only on mobile) */}
-          <button
-            onClick={handleLogout}
-            className="md:hidden flex flex-col items-center justify-center space-y-1 text-muted-foreground hover:text-red-500 transition-colors"
-          >
-            <LogOut size={24} strokeWidth={2.5} />
-            <span className="text-xs font-medium">Logout</span>
-          </button>
         </div>
 
-        {/* Desktop - Settings and Logout Section (Bottom) */}
-        <div className="hidden md:block mt-auto pb-6 space-y-2">
+        <div className="p-4 mt-auto space-y-2 pb-8">
+          <div className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">
+            System
+          </div>
           <NavLink
             to="/devices"
             className={({ isActive }) =>
               cn(
-                "flex items-center space-x-3 w-full py-3 px-4 rounded-xl transition-colors",
+                "flex items-center space-x-3 w-full py-3 px-5 rounded-xl transition-all font-bold",
                 isActive
-                  ? "text-primary bg-primary/10"
+                  ? "text-primary bg-primary/10 border-r-4 border-primary"
                   : "text-muted-foreground hover:text-primary hover:bg-surface-hover"
               )
             }
           >
-            <Smartphone size={20} />
-            <span className="text-sm font-medium">Devices</span>
+            <Smartphone size={18} />
+            <span className="text-sm">Active Sessions</span>
           </NavLink>
 
           <button
             onClick={handleLogout}
-            className="flex items-center space-x-3 w-full py-3 px-4 rounded-xl text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors"
+            className="flex items-center space-x-3 w-full py-3 px-5 rounded-xl text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-all font-bold"
           >
-            <LogOut size={20} />
-            <span className="text-sm font-medium">Logout</span>
+            <LogOut size={18} />
+            <span className="text-sm">Sign Out</span>
           </button>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }

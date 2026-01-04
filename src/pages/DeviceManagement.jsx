@@ -81,7 +81,7 @@ export default function DeviceManagement() {
 
   if (loading) {
     return (
-      <Layout title="Device Management">
+      <Layout title="Active Sessions">
         <div className="text-center py-20 text-muted-foreground">
           Loading devices...
         </div>
@@ -90,7 +90,7 @@ export default function DeviceManagement() {
   }
 
   return (
-    <Layout title="Device Management">
+    <Layout title="Active Sessions">
       <div className="max-w-3xl mx-auto">
         <div className="mb-6">
           <h2 className="text-xl font-bold text-primary mb-2">
@@ -127,7 +127,7 @@ export default function DeviceManagement() {
                   }`}
                 >
                   <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-3 flex-1">
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
                       <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                         {getDeviceIcon(device.userAgent)}
                       </div>
@@ -142,7 +142,7 @@ export default function DeviceManagement() {
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-muted-foreground mb-1 truncate">
+                        <p className="text-xs text-muted-foreground mb-1 break-all">
                           {device.userAgent}
                         </p>
                         <p className="text-xs text-muted-foreground">
