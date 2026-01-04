@@ -1,0 +1,33 @@
+{
+  "name": "Task Manager - Organize Your Tasks Efficiently",
+  "short_name": "Task Manager",
+  "description": "A modern, secure task management app with device limit protection. Organize, track, and complete your tasks with an intuitive interface.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f0fdf4",
+  "theme_color": "#15803d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "screenshots": []
+}

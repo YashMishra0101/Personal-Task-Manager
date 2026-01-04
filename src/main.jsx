@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import "./index.css";
 import { TaskProvider } from "./context/TaskContext";
 import { AuthProvider } from "./context/AuthContext";
+import { Toaster } from "sonner";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -12,6 +13,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <AuthProvider>
         <TaskProvider>
           <App />
+          <Toaster
+            position="top-center"
+            richColors
+            closeButton
+            toastOptions={{
+              style: {
+                borderRadius: "12px",
+              },
+            }}
+          />
         </TaskProvider>
       </AuthProvider>
     </BrowserRouter>

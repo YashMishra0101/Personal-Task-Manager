@@ -20,7 +20,7 @@ export function useTasks() {
 export function TaskProvider({ children }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "system");
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   // Theme Management
   useEffect(() => {
@@ -120,11 +120,38 @@ export function TaskProvider({ children }) {
     }
   };
 
+  const deleteTask = async (taskId) => {
+    try {
+      const taskRef = doc(db, "tasks", taskId);
+      await deleteDoc(taskRef);
+    } catch (e) {
+      console.error(
+        "Error deleting task from firebase, using local fallback",
+        e
+      );
+      setTasks((prev) => prev.filter((t) => t.id !== taskId));
+    }
+  };
+
+  const updateTask = async (taskId, updates) => {
+    try {
+      const taskRef = doc(db, "tasks", taskId);
+      await updateDoc(taskRef, updates);
+    } catch (e) {
+      console.error("Error updating task in firebase, using local fallback", e);
+      setTasks((prev) =>
+        prev.map((t) => (t.id === taskId ? { ...t, ...updates } : t))
+      );
+    }
+  };
+
   const value = {
     tasks,
     loading,
     addTask,
     toggleTaskCompletion,
+    deleteTask,
+    updateTask,
     theme,
     toggleTheme,
   };

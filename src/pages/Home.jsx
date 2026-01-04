@@ -10,6 +10,7 @@ export default function Home() {
   const { tasks, loading } = useTasks();
 
   const activeTasks = tasks.filter((t) => !t.completed);
+  const completedTasks = tasks.filter((t) => t.completed);
 
   // Group tasks
   const createdToday = activeTasks.filter((t) => isCreatedToday(t.createdAt));
@@ -24,12 +25,29 @@ export default function Home() {
         </div>
       ) : activeTasks.length > 0 ? (
         <div className="space-y-8">
+          {/* Stats Dashboard */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="bg-surface p-4 rounded-2xl border border-border/50 shadow-sm flex flex-col items-center justify-center text-center">
+              <span className="text-4xl font-bold text-primary mb-1">
+                {activeTasks.length}
+              </span>
+              <span className="text-sm text-muted-foreground font-medium">
+                Pending Tasks
+              </span>
+            </div>
+            <div className="bg-surface p-4 rounded-2xl border border-border/50 shadow-sm flex flex-col items-center justify-center text-center">
+              <span className="text-4xl font-bold text-muted-foreground mb-1">
+                {completedTasks.length}
+              </span>
+              <span className="text-sm text-muted-foreground font-medium">
+                Completed
+              </span>
+            </div>
+          </div>
+
           {/* Section 1: Created Today */}
           {createdToday.length > 0 && (
             <section>
-              <h3 className="text-lg font-semibold text-primary/80 mb-4 px-1">
-                Created Today
-              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {createdToday.map((task) => (
                   <TaskCard key={task.id} task={task} />

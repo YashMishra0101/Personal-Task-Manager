@@ -48,7 +48,7 @@ export default function AddTask() {
           </label>
           <input
             type="text"
-            placeholder="e.g. Buy groceries"
+            placeholder="e.g. Add task"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full p-4 rounded-xl bg-muted/50 border border-transparent focus:border-border focus:ring-2 focus:ring-primary/20 text-lg placeholder:text-muted-foreground/50 text-primary transition-all"
