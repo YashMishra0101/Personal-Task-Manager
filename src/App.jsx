@@ -5,7 +5,7 @@ import AddTask from "./pages/AddTask";
 import EditTask from "./pages/EditTask";
 import Completed from "./pages/Completed";
 import Login from "./pages/Login";
-import DeviceManagement from "./pages/DeviceManagement";
+import SecurityKey from "./pages/SecurityKey";
 import NotFound from "./pages/NotFound";
 import TaskDetails from "./pages/TaskDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -14,6 +14,8 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/security-check" element={<SecurityKey />} />
+
       <Route
         path="/"
         element={
@@ -43,14 +45,6 @@ export default function App() {
         element={
           <ProtectedRoute>
             <Completed />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/devices"
-        element={
-          <ProtectedRoute>
-            <DeviceManagement />
           </ProtectedRoute>
         }
       />

@@ -109,22 +109,6 @@ export default function Navbar() {
             </div>
 
             <div className="flex-1 p-6 space-y-4">
-              <NavLink
-                to="/devices"
-                onClick={closeMobileSidebar}
-                className={({ isActive }) =>
-                  cn(
-                    "flex items-center space-x-4 w-full py-4 px-5 rounded-2xl transition-all font-bold",
-                    isActive
-                      ? "text-primary bg-primary/10 shadow-sm border border-primary/20"
-                      : "text-muted-foreground hover:text-primary hover:bg-surface-hover"
-                  )
-                }
-              >
-                <Smartphone size={20} strokeWidth={2.5} />
-                <span>Active Sessions</span>
-              </NavLink>
-
               <div className="mt-8 pt-8 border-t border-border">
                 <button
                   onClick={handleLogout}
@@ -182,20 +166,6 @@ export default function Navbar() {
           <div className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">
             System
           </div>
-          <NavLink
-            to="/devices"
-            className={({ isActive }) =>
-              cn(
-                "flex items-center space-x-3 w-full py-3 px-5 rounded-xl transition-all font-bold",
-                isActive
-                  ? "text-primary bg-primary/10 border-r-4 border-primary"
-                  : "text-muted-foreground hover:text-primary hover:bg-surface-hover"
-              )
-            }
-          >
-            <Smartphone size={18} />
-            <span className="text-sm">Active Sessions</span>
-          </NavLink>
 
           <button
             onClick={handleLogout}
