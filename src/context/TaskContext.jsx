@@ -87,6 +87,8 @@ export function TaskProvider({ children }) {
     try {
       await addDoc(collection(db, "tasks"), {
         ...task,
+        includeLastDay:
+          task.includeLastDay !== undefined ? task.includeLastDay : true,
         completed: false,
         createdAt: new Date().toISOString(),
       });
@@ -95,6 +97,8 @@ export function TaskProvider({ children }) {
       const newTask = {
         ...task,
         id: Date.now().toString(),
+        includeLastDay:
+          task.includeLastDay !== undefined ? task.includeLastDay : true,
         completed: false,
         createdAt: new Date().toISOString(),
       };

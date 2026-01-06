@@ -6,7 +6,7 @@ import {
   isSameDay,
 } from "date-fns";
 
-export function getRemainingTime(deadline) {
+export function getRemainingTime(deadline, includeLastDay = true) {
   if (!deadline) return "";
 
   const now = new Date();
@@ -17,11 +17,19 @@ export function getRemainingTime(deadline) {
   // Calculate total difference in minutes for accuracy
   const totalMinutes = differenceInMinutes(deadlineDate, now);
 
-  // Calculate days, hours, and remaining minutes
-  // Add 1 to include the deadline day itself (inclusive calculation)
-  const days = Math.floor(totalMinutes / (24 * 60)) + 1;
+  // Calculate days based on includeLastDay preference
+  let days = Math.floor(totalMinutes / (24 * 60));
+  if (includeLastDay) {
+    days = days + 1;
+  }
+
   const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
   const minutes = totalMinutes % 60;
+
+  // Special case: Last Day indicator (only when includeLastDay is true)
+  if (days === 1 && includeLastDay) {
+    return "LAST_DAY"; // Special marker for styling
+  }
 
   // Display logic
   if (days === 0 && hours === 0 && minutes === 0) return "Due now";

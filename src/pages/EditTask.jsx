@@ -13,6 +13,7 @@ export default function EditTask() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
+  const [includeLastDay, setIncludeLastDay] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [taskNotFound, setTaskNotFound] = useState(false);
 
@@ -23,6 +24,9 @@ export default function EditTask() {
     if (task) {
       setTitle(task.title);
       setDescription(task.description || "");
+      setIncludeLastDay(
+        task.includeLastDay !== undefined ? task.includeLastDay : true
+      );
       if (task.deadline) {
         const deadlineDate = new Date(task.deadline);
         setDate(format(deadlineDate, "yyyy-MM-dd"));
@@ -50,6 +54,7 @@ export default function EditTask() {
       title,
       description: description.trim(),
       deadline,
+      includeLastDay,
     });
 
     setIsSubmitting(false);
@@ -144,6 +149,31 @@ export default function EditTask() {
               />
             </div>
           </div>
+
+          {/* Include Last Day Toggle */}
+          {date && (
+            <div className="flex items-start gap-3 p-4 bg-muted/30 rounded-xl border border-border">
+              <input
+                type="checkbox"
+                id="edit-includeLastDay"
+                checked={includeLastDay}
+                onChange={(e) => setIncludeLastDay(e.target.checked)}
+                className="w-5 h-5 mt-0.5 rounded border-border text-primary focus:ring-2 focus:ring-primary/20 cursor-pointer"
+              />
+              <label
+                htmlFor="edit-includeLastDay"
+                className="text-sm text-foreground cursor-pointer flex-1"
+              >
+                <span className="font-medium">
+                  Include deadline day in remaining days count
+                </span>
+                <span className="block text-xs text-muted-foreground mt-1">
+                  When enabled, the deadline day is counted as a remaining day.
+                  On the last day, you'll see a special "Last Day" indicator.
+                </span>
+              </label>
+            </div>
+          )}
         </div>
 
         <div className="pt-8 flex gap-3">

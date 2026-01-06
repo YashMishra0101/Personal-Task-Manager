@@ -12,6 +12,7 @@ export default function AddTask() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
+  const [includeLastDay, setIncludeLastDay] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dateInputRef = useRef(null);
@@ -33,6 +34,7 @@ export default function AddTask() {
       title,
       description: description.trim(),
       deadline,
+      includeLastDay,
     });
 
     setIsSubmitting(false);
@@ -94,6 +96,31 @@ export default function AddTask() {
               />
             </div>
           </div>
+
+          {/* Include Last Day Toggle */}
+          {date && (
+            <div className="flex items-start gap-3 p-4 bg-muted/30 rounded-xl border border-border">
+              <input
+                type="checkbox"
+                id="includeLastDay"
+                checked={includeLastDay}
+                onChange={(e) => setIncludeLastDay(e.target.checked)}
+                className="w-5 h-5 mt-0.5 rounded border-border text-primary focus:ring-2 focus:ring-primary/20 cursor-pointer"
+              />
+              <label
+                htmlFor="includeLastDay"
+                className="text-sm text-foreground cursor-pointer flex-1"
+              >
+                <span className="font-medium">
+                  Include deadline day in remaining days count
+                </span>
+                <span className="block text-xs text-muted-foreground mt-1">
+                  When enabled, the deadline day is counted as a remaining day.
+                  On the last day, you'll see a special "Last Day" indicator.
+                </span>
+              </label>
+            </div>
+          )}
         </div>
 
         <div className="pt-8">

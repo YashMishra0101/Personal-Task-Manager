@@ -68,21 +68,26 @@ export default function TaskDetails() {
     );
   }
 
-  const getDetailedTimeLeft = (deadline) => {
+  const getDetailedTimeLeft = (deadline, includeLastDay = true) => {
     if (!deadline) return null;
     const end = parseISO(deadline);
     const now = new Date();
 
-    if (isPast(end)) return { days: 0, isOverdue: true };
+    if (isPast(end)) return { days: 0, isOverdue: true, isLastDay: false };
 
     const totalMinutes = differenceInMinutes(end, now);
-    // Add 1 to include the deadline day itself (inclusive calculation)
-    const days = Math.floor(totalMinutes / (24 * 60)) + 1;
+    // Calculate days based on includeLastDay preference
+    let days = Math.floor(totalMinutes / (24 * 60));
+    if (includeLastDay) {
+      days = days + 1;
+    }
 
-    return { days, isOverdue: false };
+    const isLastDay = days === 1 && includeLastDay;
+
+    return { days, isOverdue: false, isLastDay };
   };
 
-  const timeDetails = getDetailedTimeLeft(task.deadline);
+  const timeDetails = getDetailedTimeLeft(task.deadline, task.includeLastDay);
   const isOverdue = timeDetails?.isOverdue;
 
   const handleToggleComplete = async () => {
@@ -227,9 +232,20 @@ export default function TaskDetails() {
                       </div>
                       <div className="text-xs font-medium mt-1 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-muted/50 text-muted-foreground">
                         <Clock size={12} />
-                        {isOverdue
-                          ? "Overdue"
-                          : `${timeDetails?.days} days remaining`}
+                        {isOverdue ? (
+                          "Overdue"
+                        ) : timeDetails?.isLastDay ? (
+                          <span>
+                            {timeDetails?.days} day remaining{" "}
+                            <span className="text-red-500 font-bold bg-red-500/10 px-1.5 py-0.5 rounded border border-red-500/20">
+                              (Last Day)
+                            </span>
+                          </span>
+                        ) : (
+                          `${timeDetails?.days} ${
+                            timeDetails?.days === 1 ? "day" : "days"
+                          } remaining`
+                        )}
                       </div>
                     </div>
                   </div>

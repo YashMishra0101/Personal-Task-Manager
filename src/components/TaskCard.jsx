@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTasks } from "../context/TaskContext";
-import { formatDeadlineDisplay } from "../lib/timeUtils";
+import { formatDeadlineDisplay, getRemainingTime } from "../lib/timeUtils";
 import {
   Check,
   Clock,
@@ -102,6 +102,28 @@ export default function TaskCard({ task }) {
                 <Calendar size={12} />
                 <span>{formatDeadlineDisplay(task.deadline)}</span>
               </span>
+              {(() => {
+                const timeRemaining = getRemainingTime(
+                  task.deadline,
+                  task.includeLastDay
+                );
+                const isLastDay = timeRemaining === "LAST_DAY";
+                return (
+                  <span className="flex items-center space-x-1 font-medium text-muted-foreground">
+                    <Clock size={12} />
+                    {isLastDay ? (
+                      <span>
+                        1 day remaining{" "}
+                        <span className="text-red-500 font-bold">
+                          (Last Day)
+                        </span>
+                      </span>
+                    ) : (
+                      <span>{timeRemaining}</span>
+                    )}
+                  </span>
+                );
+              })()}
             </div>
           )}
         </div>
