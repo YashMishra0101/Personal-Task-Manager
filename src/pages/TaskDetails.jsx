@@ -271,8 +271,8 @@ export default function TaskDetails() {
                 Created On
               </h3>
               <div className="bg-surface p-6 rounded-3xl border border-border shadow-sm h-full flex items-center">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 bg-muted/30 rounded-2xl text-muted-foreground">
+                <div className="flex items-start gap-4 md:-mt-9">
+                  <div className="p-3 bg-muted/30 rounded-2xl text-muted-foreground ">
                     <CalendarCheck size={28} />
                   </div>
                   <div>

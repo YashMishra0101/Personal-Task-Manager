@@ -23,20 +23,16 @@ export function getRemainingTime(deadline, includeLastDay = true) {
     days = days + 1;
   }
 
-  const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
-  const minutes = totalMinutes % 60;
-
   // Special case: Last Day indicator (only when includeLastDay is true)
   if (days === 1 && includeLastDay) {
     return "LAST_DAY"; // Special marker for styling
   }
 
-  // Display logic
-  if (days === 0 && hours === 0 && minutes === 0) return "Due now";
-  if (days === 0 && hours === 0) return `${minutes}m left`;
-  if (days === 0) return `${hours}h ${minutes}m left`;
+  // Display only days remaining
+  if (days === 0) return "Due today";
+  if (days === 1) return "1d left";
 
-  return `${days}d ${hours}h left`;
+  return `${days}d left`;
 }
 
 export function formatDeadlineDisplay(deadline) {

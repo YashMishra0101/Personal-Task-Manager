@@ -78,7 +78,7 @@ export default function AddTask() {
           {/* Deadline Field */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-muted-foreground">
-              Deadline
+              Deadline (Optional)
             </label>
             <div className="relative">
               <input
