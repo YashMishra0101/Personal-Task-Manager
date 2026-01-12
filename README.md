@@ -6,6 +6,21 @@ A modern task management application built with React and Firebase. This app hel
 ![React](https://img.shields.io/badge/React-19.2-blue)
 ![Firebase](https://img.shields.io/badge/Firebase-12.7-orange)
 
+## Tech Stack
+
+- **React 19** - Frontend framework
+- **Vite 7** - Build tool and dev server
+- **pnpm** - Fast, disk space efficient package manager
+- **React Router DOM 7** - Client-side routing
+- **Firebase 12.7** - Authentication and Firestore database
+- **Tailwind CSS 4** - Utility-first styling
+- **Framer Motion** - Animation library
+- **Lucide React** - Icon library
+- **Sonner** - Toast notifications
+- **date-fns** - Date formatting and manipulation
+- **vite-plugin-pwa** - Progressive Web App support with Workbox
+- **uuid** - Unique device ID generation
+
 ## 📸 App Previews
 
 | | |
@@ -43,9 +58,16 @@ A modern task management application built with React and Firebase. This app hel
 4. Add a field called `key` with your chosen security key (e.g., "90741209756")
 5. This key will be used to validate access to your tasks
 
+#### Security Best Practices
+- Environment variables are gitignored to prevent credential leaks
+- Firebase Security Rules should be configured
+- All forms include input validation
+- Password requirements enforce a minimum of 6 characters
+- Error messages are designed to not expose sensitive information
+
 ### User Experience
 
-- **Dark/Light Mode**: Automatically detects your system preference, with a manual toggle available
+- **Theme System**: Sophisticated light (fresh green) and dark (professional black) modes that automatically match system preference, with a manual toggle available
 - **Responsive Design**: Works seamlessly on mobile, tablet, and desktop
 - **Smooth Animations**: Powered by Framer Motion for a polished feel
 - **Toast Notifications**: Get instant feedback for all your actions
@@ -170,41 +192,6 @@ Task Manager/
 ├── package.json
 └── README.md
 ```
-
-## Security Features
-
-### Security Best Practices
-
-The app follows several security best practices:
-
-- Environment variables are gitignored to prevent credential leaks
-- Firebase Security Rules should be configured (see deployment section)
-- All forms include input validation
-- Password requirements enforce a minimum of 6 characters
-- Error messages are designed to not expose sensitive information
-
-## Theme System
-
-The app includes a sophisticated theme system with two modes:
-
-- **Light Theme**: Clean design with a fresh green color palette
-- **Dark Theme**: Professional black color scheme that's easy on the eyes
-
-The theme automatically matches your operating system preference, but you can manually toggle between light and dark mode using the button in the header.
-
-## Tech Stack
-
-- **React 19** - Frontend framework
-- **Vite 7** - Build tool and dev server
-- **React Router DOM 7** - Client-side routing
-- **Firebase 12.7** - Authentication and Firestore database
-- **Tailwind CSS 4** - Utility-first styling
-- **Framer Motion** - Animation library
-- **Lucide React** - Icon library
-- **Sonner** - Toast notifications
-- **date-fns** - Date formatting and manipulation
-- **vite-plugin-pwa** - Progressive Web App support with Workbox
-- **uuid** - Unique device ID generation
 
 ## Deployment
 
