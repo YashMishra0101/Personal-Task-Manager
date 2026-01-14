@@ -2,10 +2,6 @@
 
 A modern task management application built with React and Firebase. This app helps you organize your daily tasks with an intuitive interface, complete with dark mode support and enhanced security features.
 
-![Task Manager](https://img.shields.io/badge/Status-Production%20Ready-green)
-![React](https://img.shields.io/badge/React-19.2-blue)
-![Firebase](https://img.shields.io/badge/Firebase-12.7-orange)
-
 ## Tech Stack
 
 - **React 19** - Frontend framework
