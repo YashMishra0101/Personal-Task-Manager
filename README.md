@@ -4,18 +4,14 @@ A modern task management application built with React and Firebase. This app hel
 
 ## Tech Stack
 
-- **React 19** - Frontend framework
-- **Vite 7** - Build tool and dev server
-- **pnpm** - Fast, disk space efficient package manager
-- **React Router DOM 7** - Client-side routing
-- **Firebase 12.7** - Authentication and Firestore database
 - **Tailwind CSS 4** - Utility-first styling
 - **Framer Motion** - Animation library
-- **Lucide React** - Icon library
-- **Sonner** - Toast notifications
-- **date-fns** - Date formatting and manipulation
+- **React 19** - Frontend framework
+- **React Router DOM 7** - Client-side routing
+- **Firebase 12** - Authentication and Firestore database
+- **Vite 7** - Build tool and dev server
+- **pnpm** - Fast, disk space efficient package manager
 - **vite-plugin-pwa** - Progressive Web App support with Workbox
-- **uuid** - Unique device ID generation
 
 ## 📸 App Previews
 
